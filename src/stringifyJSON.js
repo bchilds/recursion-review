@@ -5,6 +5,11 @@
 
 var stringifyJSON = function(obj) {
   //inputs: ints, objs, arrays, strings, undefined, null, functions, bool
+
+  if (typeof obj === 'function' || obj === undefined) {
+    return '';
+  }
+
   if (typeof obj === 'string') {
     return '"' + obj + '"';
   }
@@ -36,9 +41,5 @@ var stringifyJSON = function(obj) {
     return '{' + output.toString() + '}';
   }
   
-
-
-
   return '' + obj;  
 };
-console.log();
