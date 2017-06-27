@@ -4,13 +4,12 @@
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
 
-  var finalResult;
   // two functions to start. 
     // one to determine what next char/element (ie array or object) will be
   
   //grab next string element. 
   var determineElement = function(string) {
-    var beginner = string.getCharAt(0);
+    var beginner = string.charAt(0);
 
     if (beginner === '[') {
     //check for error here
@@ -34,43 +33,49 @@ var parseJSON = function(json) {
     var bracketCount = 0;
     var quoteCount = 0;
     for (var i = 0; i < string.length; i++) {
-      if (arr[i] === '[') {
+      if (string[i] === '[') {
         braceCount++;
       }
 
-      if (arr[i] === '{') {
+      if (string[i] === '{') {
         bracketCount++;
       }
 
-      if (arr[i] === '"') {
+      if (string[i] === '"') {
         quoteCount = (quoteCount + 1) % 2;
       }
 
-      if (arr[i] === ']') {
+      if (string[i] === ']') {
         braceCount--;
       }
 
-      if (arr[i] === '}') {
+      if (string[i] === '}') {
         bracketCount--;
       }
 
-      if (arr[i] === ',' && braceCount === 0 && bracketCount === 0 && quoteCount === 0) {
+      if (string[i] === ',' && braceCount === 0 && bracketCount === 0 && quoteCount === 0) {
         indices.push(i);
       }
     }
+    indices.push(string.length);
+
     
     return indices;
   };
 
-  var arrayParse = function(arr) {
+  var arrayParse = function(string) {
     var result = [];
-    var slicedArr = arr.slice(1, arr.length - 1);
+    var slicedArr = string.slice(1, string.length - 1);
 
     
     var elemInx = checkIndices(slicedArr);
-    var currentSlice;
     
     
+    for (var i = elemInx.length - 1; i > 0; i--) {
+      var currentSlice = string.slice(elemInx[i - 1] + 1, elemInx[i]);
+      result = result.concat(determineElement(currentSlice));
+    }
+
     
     return result;
   };
@@ -80,13 +85,14 @@ var parseJSON = function(json) {
   };
 
   var stringParse = function(string) {
-    
+    return string;
   };
 
   var primitiveParse = function(prim) {
 
   };
 
+  var finalResult = determineElement(json);
   return finalResult;
 };
 
